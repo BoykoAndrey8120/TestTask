@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home page</title>
+</head>
+<body>
+ <img src="https://upload.wikimedia.org/wikipedia/commons/4/48/HyperspectralCube.jpg" width=10% height=10%>
+ <img src={% static 'img2.jpg' %} width=10% height=10% />
+ <img src={% static 'podsolnechnik.jpeg' %} width=10% height=10% />
+
+ <h2>home page</h2>
+ <a href="/signin">signin</a>
+ <a href="/signup">signup</a>
+ <a href="/newpost">newpost</a>
+ {% for item in post %}
+ <hr>
+    <h2>{{ item.title }}</h2>
+    <img src={{ item.image.url }} width=30% height=30% />
+    <p>{{ item.content }}</p>
+ </hr>
+ {% endfor %}
+    <p> some text</p>
+</body>
+</html>
