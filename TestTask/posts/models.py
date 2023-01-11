@@ -18,10 +18,11 @@ class Profile(models.Model):
 
 
 class Posts(models.Model):
-    # id_post = models.IntegerField()
+    # id_post = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
     image = models.ImageField(null=True, upload_to='images/', default=None)
     content = models.TextField(blank=True)
+    # comments = models.ForeignKey('Comments', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
@@ -37,7 +38,7 @@ class Posts(models.Model):
 
 
 class Comments(models.Model):
-    post = models.ForeignKey(Posts, on_delete=models.CASCADE)
+    post = models.ForeignKey(Posts, related_name='comments', on_delete=models.CASCADE)
     content = models.TextField(blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 

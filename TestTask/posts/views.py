@@ -1,18 +1,77 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.views.generic import View
 from django.http import HttpResponse
-from .models import Posts, Profile
-from .forms import PostForms
+from django.views.generic.edit import FormMixin
+
+from .models import Posts, Profile, Comments
+from .forms import PostForms, CommentForm
+from django.views.generic import DetailView, ListView, View
 
 
-def home(request):
-    all_posts = Posts.objects.all()
-    print(all_posts)
-    context = {'post': all_posts }
+class PostsListView(ListView):
+    model = Posts
+    template_name = 'posts/home.html'
+    context_object_name = 'posts'
 
-    return render(request, 'posts/home.html', context)
+    # def get_context_data(self, *, object_list=None, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['comments'] = 'comments'
+    #     return context
+class PostDetailView(DetailView):
+    model = Posts
+    template_name = 'posts/post_detail.html'
+    context_object_name = 'post'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs["pk"]
+        # slug = self.kwargs["slug"]
+
+        form = CommentForm()
+        post = get_object_or_404(Posts, pk=pk)
+        comments = post.comments.all()
+
+        context['post'] = post
+        context['comments'] = comments
+        context['form'] = form
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = CommentForm(request.POST)
+        self.object = self.get_object()
+        context = super().get_context_data(**kwargs)
+
+        post = Posts.objects.filter(id=self.kwargs['pk'])[0]
+        comments = post.comment_set.all()
+
+        context['post'] = post
+        context['comments'] = comments
+        context['form'] = form
+
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            content = form.cleaned_data['content']
+
+            comment = Comment.objects.create(
+                name=name, email=email, content=content, post=post
+            )
+
+            form = CommentForm()
+            context['form'] = form
+            return self.render_to_response(context=context)
+
+        return self.render_to_response(context=context)
+
+
+# def home(request, pk=None):
+#     all_posts = Posts.objects.all()
+#     all_comments = Comments.objects.all()
+#     print(all_posts)
+#     context = {'post': all_posts, 'comments': all_comments }
+#
+#     return render(request, 'posts/home.html', context)
 
 
 
@@ -67,27 +126,76 @@ def signin(request):
 
 
 
-def newpost(request):
+
+def newpost(request, pk=None):
     print(request.method)
     if request.method == "GET":
         return render(request, 'posts/newpost.html')
     if request.method == "POST":
         form = PostForms(request.POST, request.FILES)
         if form.is_valid():
-         post = form.save(commit=False)
-         post.save()
-         form.save()
-         return redirect('/')
+            post = form.save(commit=False)
+            post.save()
+            form.save()
+            return redirect('/')
         else:
             print("error")
 
 
+class CommentsView(ListView):
+    model = Comments
+    template_name = 'posts/addcomment.html'
+    context_object_name = 'comment'
 
 
+class CommentsDetailView(DetailView):
+    model = Comments
+    template_name = 'posts/addcomment_pk.html'
+    context_object_name = 'com'
 
 
+    # def form_valid(self, form):
+    #     post = self.get_object()
+    #     myform = form.save(commit=False)
+    #     myform.post = post
+    #     form.save()
+    #     return super(Posts, self).form_valid(form)
 
-
-
-
-
+    # def addcomment(request, pk=None):
+    # if request.method == 'GET':
+    #     return render(request, 'posts/addcomment.html')
+    # elif request.method == 'POST':  # /newcomment
+    #     form = CommentForm(request.POST)
+    #     form.instance.post_id = self.kwargs.get("post_id")
+    #     id_post = Posts.pk
+    #     print('!!!!!!!!!!!!!!!!')
+    #     print(id_post)
+    #     # if request.user.is_authenticated != True:
+    #     #     print("Not authenticated")
+    #     #     return (request, '/')
+    #     # else:
+    #     #     print(form)
+    #     #     (request, '/')
+    #     if form.is_valid():
+    #
+    #         comment = form.save(commit=False)
+    #         comment.save()
+    #         form.save()
+    #         print('!!!!!!!!!!!!!!!!')
+    #         print(id_post)
+    #         return redirect('/')
+    #     else:
+    #         print("error")
+    #         print('!!!!!!!!!!!!!!!!')
+    #         print(id_post)
+    #         return redirect('/')
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #

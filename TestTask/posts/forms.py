@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Posts
+from .models import Posts, Comments
 
 # class PostForms(forms.Form):
 #     title = forms.CharField(max_length=100)
@@ -16,5 +16,17 @@ class PostForms(ModelForm):
 
 def handler_view(request):
     form = PostForms(request.POST, request.FILES)
+    if form.is_valid():
+        form.save()
+
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comments
+        fields = ['content', 'owner', 'post']
+
+
+def handler_view(request):
+    form = CommentForm(request.POST)
     if form.is_valid():
         form.save()
