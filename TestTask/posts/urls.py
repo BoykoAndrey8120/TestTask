@@ -13,7 +13,7 @@ urlpatterns = [
     # path('addcomment', views.addcomment),
     # path('addcomment', views.addcomment, name='addcomment'),
     path('addcomment/<slug:slug>/<int:pk>', views.CommentsDetailView.as_view(), name='addcomment_pk'),
-    path('addcomment', views.CommentsView.as_view(), name='addcomment'),
+    # path('addcomment', views.CommentsView.as_view(), name='addcomment'),
 
     # path('users', views.users, name="users")
 ]

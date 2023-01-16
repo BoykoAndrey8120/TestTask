@@ -29,12 +29,6 @@
     <p class="row-post" >{{ item.content }}</p>
  <button type="submit" class="button bg-blue-700"> <a href="/post/{{item.id}}"> Detail </a> </button>
  </hr>
- <a href="{% url 'addcomment'  %}">add comment</a>
- {% for comment in comments %}
- <h3> {{comment.content}} </h3>
- <h3> {{comment.post}} </h3>
  {% endfor %}
- {% endfor %}
-    <p> some text</p>
 </body>
 </html>

@@ -184,10 +184,10 @@ class Newpost(View):
 #             print("error")
 
 
-class CommentsView(ListView):
-    model = Comments
-    template_name = 'posts/addcomment.html'
-    context_object_name = 'comment'
+# class CommentsView(ListView):
+#     model = Comments
+#     template_name = 'posts/addcomment.html'
+#     context_object_name = 'comment'
 
 
 class CommentsDetailView(DetailView):

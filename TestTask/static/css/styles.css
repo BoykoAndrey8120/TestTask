@@ -7,11 +7,11 @@
 
  .img-line {
         text-align: center;
-	    border: 2px solid #55c5e9; /* Рамка навколо зображення */
-		padding: 15px; /* Відстань від картинки до рамки */
-		background: #66CDAA; /* Колір фона */
-		margin-right: 10px; /* Відступ зправа */
-		margin-bottom: 10px; /* Відступ знизу */
+	    border: 2px solid #55c5e9;
+		padding: 15px;
+		background: #66CDAA;
+		margin-right: 10px;
+		margin-bottom: 10px;
     }
 
 
