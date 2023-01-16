@@ -23,10 +23,9 @@ def handler_view(request):
 class CommentForm(ModelForm):
     class Meta:
         model = Comments
-        fields = ['content', 'owner', 'post']
+        fields = ['content']
 
-
-def handler_view(request):
-    form = CommentForm(request.POST)
-    if form.is_valid():
-        form.save()
+        def handler_view(request):
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                form.save()

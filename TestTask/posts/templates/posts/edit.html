@@ -20,7 +20,7 @@
 
             <div class="container m-auto">
 
-                <h1 class="text-2xl leading-none text-gray-900 tracking-tight mt-3"><a href="/">Home</a> / Create a New Post <b>{{user}}</b> </h1>
+                <h1 class="text-2xl leading-none text-gray-900 tracking-tight mt-3"><a href="/">Home</a> / Edit a Post - {{ post.title }} <b>{{user.username}}</b> </h1>
                 <!-- <ul class="mt-5 -mr-3 flex-nowrap lg:overflow-hidden overflow-x-scroll uk-tab">
                     <li class="uk-active"><a href="#">General</a></li>
                     <li><a href="#">Profile</a></li>
@@ -38,39 +38,40 @@
                         <p></p>
                     </div>
                     <div class="bg-white rounded-md lg:shadow-lg shadow col-span-2">
-
+                {% if user == post.user %}
                     <form action="" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        {{ form.as_p }}
-<!--                       <div class="grid grid-cols-2 gap-3 lg:p-6 p-4">-->
+                       <div class="grid grid-cols-2 gap-3 lg:p-6 p-4">
 
 
-<!--                            <div class="col-span-2">-->
-<!--                                <label for=""> Posts Image</label>-->
-<!--                                <img width="100" height="100" src="{{image}}" />-->
-<!--                                <input type="file" name="image" value="image" class="shadow-none bg-gray-100">-->
-<!--                            </div>-->
-<!--                            <div class="col-span-2">-->
-<!--                                <label for="">Post</label>-->
-<!--                                <textarea name="content" rows="3"  class="shadow-none bg-gray-100">{{content}}</textarea>-->
-<!--                            </div>-->
+                            <div class="col-span-2">
+                                <label for=""> Posts Image</label>
+                                <img width="100" height="100" src="{{post.image}}" />
+                                <input type="file" name="image" value="image" class="shadow-none bg-gray-100">
+                            </div>
+                            <div class="col-span-2">
+                                <label for="">Post</label>
+                                <textarea name="content" rows="3"  class="shadow-none bg-gray-100">{{post.content}}</textarea>
+                            </div>
 
 
-<!--                            <div class="col-span-2">-->
-<!--                                <label for=""> Title </label>-->
-<!--                                <input type="title" name="title" value="{{title}}" class="shadow-none bg-gray-100">-->
-<!--                            </div>-->
+                            <div class="col-span-2">
+                                <label for=""> Title </label>
+                                <input type="title" name="title" value="{{post.title}}" class="shadow-none bg-gray-100">
+                            </div>
 
-<!--                       </div>-->
+                       </div>
 
                        <div class="bg-gray-10 p-6 pt-0 flex justify-end space-x-3">
                            <button class="p-2 px-4 rounded bg-gray-50 text-red-500"> <a href="/">Cancel</a> </button>
                            <button type="submit" class="button bg-blue-700"> Save </button>
                        </div>
                     </form>
+{% else %}
+                        <p>You can`t edit post</p>
 
                     </div>
-
+{% endif %}
                     <!-- <div>
                         <h3 class="text-xl mb-2"> Privacy</h3>
                         <p> </p>
@@ -143,14 +144,14 @@
 
  <!-- Scripts
     ================================================== -->
-<!--    <script src="{% static 'assets/js/tippy.all.min.js' %}"></script>-->
-<!--    <script src="{% static 'assets/js/jquery-3.3.1.min.js' %}"></script>-->
-<!--    <script src="{% static 'assets/js/uikit.js' %}"></script>-->
-<!--    <script src="{% static 'assets/js/simplebar.js' %}"></script>-->
-<!--    <script src="{% static 'assets/js/custom.js' %}"></script>-->
+    <script src="{% static 'assets/js/tippy.all.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/uikit.js' %}"></script>
+    <script src="{% static 'assets/js/simplebar.js' %}"></script>
+    <script src="{% static 'assets/js/custom.js' %}"></script>
 
 
-<!--    <script src="{% static '../../unpkg.com/ionicons%405.2.3/dist/ionicons.js' %}"></script>-->
+    <script src="{% static '../../unpkg.com/ionicons%405.2.3/dist/ionicons.js' %}"></script>
 </body>
 
 </html>

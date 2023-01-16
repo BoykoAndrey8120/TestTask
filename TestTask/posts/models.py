@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-import uuid
 
 
 User = get_user_model()
@@ -22,6 +21,7 @@ class Posts(models.Model):
     title = models.CharField(max_length=100)
     image = models.ImageField(null=True, upload_to='images/', default=None)
     content = models.TextField(blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     # comments = models.ForeignKey('Comments', on_delete=models.CASCADE)
 
     def __str__(self):

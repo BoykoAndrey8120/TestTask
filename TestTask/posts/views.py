@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
+from django.urls import reverse_lazy
 from django.views.generic import View
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.edit import FormMixin
 
 from .models import Posts, Profile, Comments
 from .forms import PostForms, CommentForm
-from django.views.generic import DetailView, ListView, View
+from django.views.generic import DetailView, ListView, UpdateView, View
 
 
 class PostsListView(ListView):
@@ -15,14 +16,18 @@ class PostsListView(ListView):
     template_name = 'posts/home.html'
     context_object_name = 'posts'
 
+
     # def get_context_data(self, *, object_list=None, **kwargs):
     #     context = super().get_context_data(**kwargs)
     #     context['comments'] = 'comments'
     #     return context
+
+
 class PostDetailView(DetailView):
     model = Posts
     template_name = 'posts/post_detail.html'
     context_object_name = 'post'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         pk = self.kwargs["pk"]
@@ -43,19 +48,23 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
 
         post = Posts.objects.filter(id=self.kwargs['pk'])[0]
-        comments = post.comment_set.all()
+        user = request.user
+
+        comments = post.comments.all()
+        print(comments)
 
         context['post'] = post
         context['comments'] = comments
         context['form'] = form
 
         if form.is_valid():
-            name = form.cleaned_data['name']
-            email = form.cleaned_data['email']
+            print('!!!!!!!!!!!!!!')
+            # post = form.cleaned_data['post']
+            owner = user
             content = form.cleaned_data['content']
 
-            comment = Comment.objects.create(
-                name=name, email=email, content=content, post=post
+            comment = Comments.objects.create(
+                content=content, owner=owner, post=post
             )
 
             form = CommentForm()
@@ -64,6 +73,16 @@ class PostDetailView(DetailView):
 
         return self.render_to_response(context=context)
 
+
+
+class PostUpdateView(UpdateView):
+    model = Posts
+    fields = [
+        'title', 'content', 'image'
+    ]
+    template_name = 'posts/edit.html'
+    context_object_name = 'post'
+    success_url = '/'
 
 # def home(request, pk=None):
 #     all_posts = Posts.objects.all()
@@ -125,21 +144,44 @@ def signin(request):
         return render(request, 'posts/signin.html')
 
 
+class Newpost(View):
+    model = Posts
+    template_name = 'posts/newpost.html'
+    context_object_name = 'post'
+    fields = ['title', 'image', 'content']
 
-
-def newpost(request, pk=None):
-    print(request.method)
-    if request.method == "GET":
-        return render(request, 'posts/newpost.html')
-    if request.method == "POST":
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        context = {'form': PostForms(), 'user': user}
+        return render(request, self.template_name, context)
+    #
+    def post(self, request, *args, **kwargs):
+        user = request.user
         form = PostForms(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
+            post.user = user
             post.save()
             form.save()
             return redirect('/')
         else:
             print("error")
+        # return render(request, self.template_name, {'user': user})
+        # return render(request, self.template_name, {'form': form, 'user': user})
+
+# def newpost(request, pk=None):
+#     print(request.method)
+#     if request.method == "GET":
+#         return render(request, 'posts/newpost.html')
+#     if request.method == "POST":
+#         form = PostForms(request.POST, request.FILES)
+#         if form.is_valid():
+#             post = form.save(commit=False)
+#             post.save()
+#             form.save()
+#             return redirect('/')
+#         else:
+#             print("error")
 
 
 class CommentsView(ListView):
