@@ -10,6 +10,5 @@ urlpatterns = [
     path('signin', views.signin, name='signin'),
     path('newpost', views.Newpost.as_view(), name='newpost'),
     path('addcomment/<slug:slug>/<int:pk>', views.CommentsDetailView.as_view(), name='addcomment_pk'),
-    # path('addcomment', views.CommentsView.as_view(), name='addcomment'),
-    # path('users', views.users, name="users")
+
 ]

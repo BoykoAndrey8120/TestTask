@@ -1,26 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
-from django.urls import reverse_lazy
-from django.views.generic import View
-from django.http import HttpResponse, HttpResponseRedirect
-from django.views.generic.edit import FormMixin
-
 from .models import Posts, Profile, Comments
 from .forms import PostForms, CommentForm
-from django.views.generic import DetailView, ListView, UpdateView, View
+from django.views.generic import DetailView, ListView, UpdateView, View, CreateView
 
 
 class PostsListView(ListView):
     model = Posts
     template_name = 'posts/home.html'
     context_object_name = 'posts'
-
-
-    # def get_context_data(self, *, object_list=None, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['comments'] = 'comments'
-    #     return context
 
 
 class PostDetailView(DetailView):
@@ -74,7 +63,6 @@ class PostDetailView(DetailView):
         return self.render_to_response(context=context)
 
 
-
 class PostUpdateView(UpdateView):
     model = Posts
     fields = [
@@ -83,15 +71,6 @@ class PostUpdateView(UpdateView):
     template_name = 'posts/edit.html'
     context_object_name = 'post'
     success_url = '/'
-
-# def home(request, pk=None):
-#     all_posts = Posts.objects.all()
-#     all_comments = Comments.objects.all()
-#     print(all_posts)
-#     context = {'post': all_posts, 'comments': all_comments }
-#
-#     return render(request, 'posts/home.html', context)
-
 
 
 def signup(request):
@@ -166,28 +145,6 @@ class Newpost(View):
             return redirect('/')
         else:
             print("error")
-        # return render(request, self.template_name, {'user': user})
-        # return render(request, self.template_name, {'form': form, 'user': user})
-
-# def newpost(request, pk=None):
-#     print(request.method)
-#     if request.method == "GET":
-#         return render(request, 'posts/newpost.html')
-#     if request.method == "POST":
-#         form = PostForms(request.POST, request.FILES)
-#         if form.is_valid():
-#             post = form.save(commit=False)
-#             post.save()
-#             form.save()
-#             return redirect('/')
-#         else:
-#             print("error")
-
-
-# class CommentsView(ListView):
-#     model = Comments
-#     template_name = 'posts/addcomment.html'
-#     context_object_name = 'comment'
 
 
 class CommentsDetailView(DetailView):
@@ -196,48 +153,4 @@ class CommentsDetailView(DetailView):
     context_object_name = 'com'
 
 
-    # def form_valid(self, form):
-    #     post = self.get_object()
-    #     myform = form.save(commit=False)
-    #     myform.post = post
-    #     form.save()
-    #     return super(Posts, self).form_valid(form)
 
-    # def addcomment(request, pk=None):
-    # if request.method == 'GET':
-    #     return render(request, 'posts/addcomment.html')
-    # elif request.method == 'POST':  # /newcomment
-    #     form = CommentForm(request.POST)
-    #     form.instance.post_id = self.kwargs.get("post_id")
-    #     id_post = Posts.pk
-    #     print('!!!!!!!!!!!!!!!!')
-    #     print(id_post)
-    #     # if request.user.is_authenticated != True:
-    #     #     print("Not authenticated")
-    #     #     return (request, '/')
-    #     # else:
-    #     #     print(form)
-    #     #     (request, '/')
-    #     if form.is_valid():
-    #
-    #         comment = form.save(commit=False)
-    #         comment.save()
-    #         form.save()
-    #         print('!!!!!!!!!!!!!!!!')
-    #         print(id_post)
-    #         return redirect('/')
-    #     else:
-    #         print("error")
-    #         print('!!!!!!!!!!!!!!!!')
-    #         print(id_post)
-    #         return redirect('/')
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
